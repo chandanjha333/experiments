@@ -1,0 +1,111 @@
+<!DOCTYPE html>
+<html>
+  <head>
+    <title>React Basics</title>
+    <style>
+      body{
+        font-family: Arial;
+      }
+
+      .welcome-note {
+        font-size: 20px;
+      }
+      
+      .input-container{
+        padding: 5px 10px;
+        margin-bottom: 10px;
+        margin-right: 10px;
+      }
+
+      .blue-button {
+        background-color: rgb(0, 123, 255);
+        color: white;
+        border: none;
+        padding: 10px;
+        margin-top: 10px;
+        margin-right: 5px;
+        border-radius: 5px;
+      }
+    </style>
+  </head>
+  <body>
+    <div class="js-container"></div>
+
+    <script src="https://unpkg.com/supersimpledev/react.js"></script>
+    <script src="https://unpkg.com/supersimpledev/react-dom.js"></script>
+
+    <script src="https://unpkg.com/supersimpledev/babel.js"></script>
+    <script src="https://unpkg.com/supersimpledev/dayjs.js"></script>
+    <script type="text/babel">
+      
+      /*
+      const div = (
+        <div>
+           <p>Current time: {dayjs().format('HH:mm:ss')}</p>
+        </div>
+      );
+
+      const container = document.querySelector('.js-container');
+      const root = ReactDOM.createRoot(container);
+      root.render(div);
+      setInterval(() => {
+        const div = (
+          <div>
+            <p>Current time: {dayjs().format('HH:mm:ss')}</p>
+          </div>
+        );
+        root.render(div);
+      }, 1000);
+      */
+
+      function CounterButton() {
+        const [count, setCount] = React.useState(0);
+
+        function Counter() {
+          setCount(count + 1);
+        }
+
+        return (
+          <>
+            <button onClick = {Counter}>Clicked {count} {count == 1? "time" : "times"}</button>
+          </>
+        );
+      }
+      
+      function App() {
+        const [showPassword, setShowPassword] = React.useState(false);
+
+        function hidePassword() {
+          if(showPassword) {
+            setShowPassword(false);
+          } else {
+            setShowPassword(true);
+          }
+        }
+
+        return (
+          <>
+            <p className="welcome-note">Hello, welcome to my Website</p>
+            <div>
+              <input className="input-container" placeholder="Email"></input>
+            </div>
+            <div>
+              <input 
+                type={showPassword ? "text" : "password"}
+                className="input-container"
+                placeholder="Password"
+              ></input>
+              <button onClick={hidePassword}>Show</button>
+            </div>
+            <button className="blue-button">Login</button>
+            <button className="blue-button">Sign up</button>
+          </>
+        );
+      }
+
+      const container = document.querySelector('.js-container');
+      const root = ReactDOM.createRoot(container);
+      root.render(<App />);
+    </script>
+  </body>
+</html>
