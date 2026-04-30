@@ -4,6 +4,13 @@ import { products } from '../../starting-code/data/products'
 import checkMarkImage from '../assets/images/icons/checkmark.png'
 
 export default function HomePage() {
+  fetch('http://localhost:3000/api/products')
+    .then((response) => {
+      return response.json()
+    }).then((data) => {
+      console.log(data);
+    })
+
   return (
     <>
       <title>Ecommerce Project</title>
