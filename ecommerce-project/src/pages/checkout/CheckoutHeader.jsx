@@ -1,7 +1,7 @@
 import { Link } from 'react-router'
-import logoImage from '../assets/images/logo.png'
-import mobileLogoImage from '../assets/images/mobile-logo.png'
-import checkoutLockIconImage from '../assets/images/icons/checkout-lock-icon.png'
+import logoImage from '../../assets/images/logo.png'
+import mobileLogoImage from '../../assets/images/mobile-logo.png'
+import checkoutLockIconImage from '../../assets/images/icons/checkout-lock-icon.png'
 import './CheckoutHeader.css'
 
 export default function CheckoutHeader() {
