@@ -6,7 +6,6 @@ import './HomePage.css'
 
 export default function HomePage({ cart, loadCart }) {
   const [products, setProducts] = useState([]);
-  console.log(cart);
 
   useEffect(() => {
     axios.get('/api/products')
