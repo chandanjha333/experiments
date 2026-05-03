@@ -6,7 +6,15 @@ import searchIconImage from '../assets/images/icons/search-icon.png'
 import cartIconImage from '../assets/images/icons/cart-icon.png'
 import './Header.css'
 
-export default function Header({ cart }) {
+type HeaderProps = {
+  cart: {
+    productId: string;
+    quantity: number;
+    deliveryOptionId: string;
+  }[];
+};
+
+export default function Header({ cart }: HeaderProps) {
   const [searchParams] = useSearchParams();
   const search = searchParams.get('search');
   const [searchText, setSearchText] = useState(search || '');
@@ -17,7 +25,7 @@ export default function Header({ cart }) {
     totalQuantity += cartItem.quantity;
   });
 
-  const setQuery = (event) => {
+  const setQuery = (event:React.ChangeEvent<HTMLInputElement>) => {
     setSearchText(event.target.value);
   }
 
