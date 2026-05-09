@@ -1,23 +1,23 @@
 import http from 'http';
-import fs from 'fs';
-import url from 'url';
 
-const myServer = http.createServer((req, res) => {
-  if(req.url === '/favicon.ico') return res.end();
-  const log = `${Date.now()}: ${req.url} New Req Received\n`;
-  const myUrl = url.parse(req.url, true);
-  console.log(myUrl);
-  fs.appendFile("log.txt", log, (err, data) => {
-    switch(myUrl.pathname) {
-      case "/": res.end("HomePage");
-      break;
-      case "/about": res.end("I am a human");
-      break;
-      default: res.end("404 Not Found");
-    }
-  });
+import express from 'express';
+
+const app = express();
+
+app.get('/', (req, res) => {
+  return res.send('Hello from HomePage');
 });
 
-myServer.listen(8000, () => {
-  console.log("Server Started");
-})
+app.get('/about', (req, res) => {
+  return res.send('Hello from AboutPage ' + 'hey' + req.query.name);
+});
+
+app.listen(8000, () => {
+ console.log("Server Started");
+});
+
+//const myServer = http.createServer(app);
+
+//myServer.listen(8000, () => {
+//  console.log("Server Started");
+//})
