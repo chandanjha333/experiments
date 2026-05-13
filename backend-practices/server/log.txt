@@ -1,3 +1,9 @@
 1778362359903: GET New Req Received
 1778363661543: GET New Req Received
 1778363664958: GET New Req Received
+
+
+/users -> render HTML element
+/api/users -> send JSON data
+
+hybrid design, can be used for both browser and other devices
