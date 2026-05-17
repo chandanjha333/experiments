@@ -8,9 +8,11 @@
   "main": "index.js",
   "scripts": {
     "test": "npm test",
-    "start": "node index.js"
+    "start": "nodemon server/index.js"
   },
   "dependencies": {
-    "express": "^5.2.1"
+    "express": "^5.2.1",
+    "mongoose": "^9.6.2",
+    "nodemon": "^3.1.14"
   }
 }

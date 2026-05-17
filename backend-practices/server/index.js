@@ -1,8 +1,39 @@
 import express from 'express';
 import fs from 'fs';
-import users from '../MOCK_DATA.json' with { type: "json" };
+import mongoose from 'mongoose';
 
 const app = express();
+
+//Connection
+mongoose.connect("mongodb://127.0.0.1:27017/backend-app")
+.then(() => {
+  console.log("MongoDB Connected");
+})
+.catch(err => console.log("MongoDB Error", err));
+
+//Schema
+const userSchema = new mongoose.Schema({
+  firstName: {
+    type: String,
+    required: true,
+  }, 
+  lastName: {
+    type: String,
+  },
+  email: {
+    type: String,
+    required: true,
+    unique: true,
+  },
+  job_title: {
+    type: String,
+  },
+  gender: {
+    type: String
+  },
+}, { timestamps: true });
+
+const User = mongoose.model("user", userSchema);
 
 //Middleware - Plugin
 app.use(express.urlencoded({ extended: false }));
@@ -16,14 +47,17 @@ app.get('/about', (req, res) => {
 });
 
 //REST API
-app.get('/api/users', (req, res) => {
-  return res.json(users);
+app.get('/api/users', async (req, res) => {
+  const allDbUsers = await User.find({});
+
+  return res.json(allDbUsers);
 });
 
-app.get('/users', (req, res) => {
+app.get('/users', async (req, res) => {
+  const allDbUsers = await User.find({});
   const html = `
     <ul>
-      ${users.map((user) => `<li>${user.first_name}</li>`).join("")}
+      ${allDbUsers.map((user) => `<li>${user.firstName} - ${user.email}</li>`).join("")}
     </ul>
   `;
 
@@ -32,38 +66,43 @@ app.get('/users', (req, res) => {
 
 app
   .route('/api/users/:id')
-  .get((req, res) => {
-    const id = Number(req.params.id);
-    const user = users.find(user => user.id === id);
+  .get(async (req, res) => {
+    const user = await User.findById(req.params.id);
     return res.json(user);
   })
-  .patch((req, res) => {
-    const id = Number(req.params.id);
-    const user = users.find(user => user.id === id);
+  .patch(async (req, res) => {
+    const user = await User.findById(req.params.id);
     Object.assign(user, req.body);
-    fs.writeFile("../MOCK_DATA.json", JSON.stringify(users), (err) => {
-      if(err) console.log(err);
-      return res.json({ status: "success" });
-    }); 
   })
-  .delete((req, res) => {
-    const id = Number(req.params.id);
-    const updatedUsers = users.filter(user => user.id !== id);
-    //TODO: Delete the user with id
-    fs.writeFile("../MOCK_DATA.json", JSON.stringify(updatedUsers), (err) => {
-      if(err) console.log(err);
-      return res.json({ status: "success" });
-    });
+  .delete(async (req, res) => {
+    await User.findByIdAndDelete(req.params.id);
+    return res.json({ status: "Success" });
   });
 
 
-app.post('/api/users', (req, res) => {
+app.post('/api/users', async (req, res) => {
   const body = req.body;
-  users.push({ ...body, id: users.length + 1 });
-  fs.writeFile("../MOCK_DATA.json", JSON.stringify(users), (err) => {
-    if(err) console.log(err);
-    return res.json({ status: "success", id: users.length });
-  }); 
+  if(
+    !body ||
+    !body.first_name ||
+    !body.last_name ||
+    !body.email ||
+    !body.gender ||
+    !body.job_title
+  ) {
+    return res.status(400).json({ msg: "All fields are required..."});
+  }
+  
+  const result = await User.create({
+    firstName: body.first_name,
+    lastName: body.last_name,
+    email: body.email,
+    gender: body.gender,
+    jobTitle: body.job_title,
+  });
+
+  console.log("result", res.body);
+  return res.status(201).json({ msg: "Success" });
 });
 
 app.listen(8000, () => {
